@@ -309,7 +309,7 @@ extraContainerVolumes: []
 ##
 persistence:
   type: pvc
-  enabled: false
+  enabled: true
   storageClassName: standard
   accessModes:
     - ReadWriteOnce

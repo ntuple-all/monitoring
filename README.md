@@ -10,7 +10,7 @@ git clone https://github.com/ntuple-all/monitoring.git (pull 만 필요한 환�
 cd kube-prometheus-stack<br/>
 vi values.yaml<br/>
 757줄 adminPassword: ntuple  (원하는 패스워드 설정)<br/>
-2338줄 30090 -> 30200        (접속을 위한 NodePort 설정)<br/>
+2338줄 30090                 (접속을 위한 NodePort 설정)<br/>
 2351줄 ClusterIP -> NodePort (접속을 위해 NodePort 로 설정)<br/>
 2843줄 retention: 10d        (프로메테우스 데이터 보관 기관 설정)<br/>
 2847줄 retentionSize: ""     (프로메테우스 데이터 사이즈 설정, 단위:B, KB, MB, GB, TB)<br/>
@@ -34,7 +34,7 @@ securityContext:<br/>
 ---<br/>
 vi charts/grafana/values.yaml<br/>
 172줄 ClusterIP -> NodePort  (접속을 위해 NodePort 로 설정)<br/>
-174줄 nodePort: 31000 추가   (접속을 위한 NodePort 설정) <br/>
+174줄 nodePort: 30100 추가   (접속을 위한 NodePort 설정) <br/>
 <br/>
 vi charts/<br/>
 310줄                        (pvc 설정, 설정하지 않으면 emptyDir)<br/>

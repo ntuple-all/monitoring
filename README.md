@@ -86,6 +86,3 @@ spec:<br/>
     namespace: monitoring<br/>
 ---<br/>
 <br/>
-# pv 실행<br/>
-kubectl apply -f prometheus-pv.yaml<br/>
-kubectl apply -f grafana-pv.yaml<br/>

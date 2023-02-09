@@ -35,8 +35,6 @@ securityContext:<br/>
 vi charts/grafana/values.yaml<br/>
 172줄 ClusterIP -> NodePort  (접속을 위해 NodePort 로 설정)<br/>
 174줄 nodePort: 30100 추가   (접속을 위한 NodePort 설정) <br/>
-<br/>
-vi charts/<br/>
 310줄                        (pvc 설정, 설정하지 않으면 emptyDir)<br/>
 persistence:<br/>
    type: pvc<br/>

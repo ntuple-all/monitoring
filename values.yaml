@@ -92,6 +92,20 @@ defaultRules:
 #        rules:
 #        - record: my_record
 #          expr: 100 * my_record
+#additionalPrometheusRules: 
+#  - name: prometheus-test-rule
+#    groups:
+#      - name: test-group
+#        rules:
+#        - record: test-rule
+#          expr: up == 0
+#          expr: count(node_intr_total) >= 2
+#          for: 30m
+#          labels:
+#            severity: normal
+#          annotations:
+#            description: "Node Add"
+
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
@@ -102,6 +116,14 @@ additionalPrometheusRulesMap: {}
 #      rules:
 #      - record: my_record
 #        expr: 100 * my_record
+#additionalPrometheusRulesMap: 
+#  rule-name:
+#    groups:
+#    - name: test-group
+#      rules:
+#      - record: test-rule
+#        expr: count(node_intr_total) >= 2
+#        for: 30m
 
 ##
 global:
@@ -176,39 +198,50 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
-    inhibit_rules:
-      - source_matchers:
-          - 'severity = critical'
-        target_matchers:
-          - 'severity =~ warning|info'
-        equal:
-          - 'namespace'
-          - 'alertname'
-      - source_matchers:
-          - 'severity = warning'
-        target_matchers:
-          - 'severity = info'
-        equal:
-          - 'namespace'
-          - 'alertname'
-      - source_matchers:
-          - 'alertname = InfoInhibitor'
-        target_matchers:
-          - 'severity = info'
-        equal:
-          - 'namespace'
+#      slack_api_url: https://hooks.slack.com/services/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
     route:
-      group_by: ['namespace']
-      group_wait: 30s
+      group_wait: 1m
       group_interval: 5m
-      repeat_interval: 12h
-      receiver: 'null'
+      repeat_interval: 15m
+      receiver: node-increase
       routes:
-      - receiver: 'null'
+      - receiver: node-increase
         matchers:
-          - alertname =~ "InfoInhibitor|Watchdog"
+          - alertname = "NodeIncrease"
+      - receiver: pod-cpu
+        matchers:
+          - alertname = "PodCPUWarning"
+      - receiver: pod-memory
+        matchers:
+          - alertname = "PodMemoryWarning"
+      - receiver: node-disk
+        matchers:
+          - alertname = "NodeDiskWarning"
     receivers:
-    - name: 'null'
+    - name: node-increase
+      slack_configs:
+      - channel: #alerttest
+        send_resolved: true
+        title: 'Server Node Increase'
+        text: 'Node 증가 하였습니다. 증가한 원인 확인이 필요합니다'
+    - name: pod-cpu
+      slack_configs:
+      - channel: #alerttest
+        send_resolved: true
+        title: 'Pod CPU > 70%'
+        text: '특정 pod의 CPU가 70% 넘었습니다.'
+    - name: pod-memory
+      slack_configs:
+      - channel: #alerttest
+        send_resolved: true
+        title: 'Pod Memory > 50% '
+        text: '특정 Pod의 Memory가 50% 넘었습니다.'
+    - name: node-disk
+      slack_configs:
+      - channel: #alerttest
+        send_resolved: true
+        title: 'Node Disk > 85%'
+        text: 'Node Disk 정리가 필요합니다.'
     templates:
     - '/etc/alertmanager/config/*.tmpl'
 
@@ -2945,11 +2978,18 @@ prometheus:
     #
       volumeClaimTemplate:
         spec:
-    #      storageClassName: gluster
+          storageClassName: standard
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
               storage: 10Gi
+#      volumeClaimTemplate:
+#        spec:
+#          storageClassName: gp3
+#          accessModes: ["ReadWriteOnce"]
+#          resources:
+#            requests:
+#              storage: 10Gi
     #    selector: {}
 
     ## Using tmpfs volume

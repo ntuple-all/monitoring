@@ -309,14 +309,20 @@ extraContainerVolumes: []
 ##
 persistence:
   type: pvc
-  enabled: true
-  storageClassName: standard
+  enabled: true 
+  storageClassName: standard 
   accessModes:
     - ReadWriteOnce
   size: 15Gi
+#  type: pvc
+#  enabled: true
+#  storageClassName: gp3
+#  accessModes:
+#    - ReadWriteOnce
+#  size: 15Gi
   # annotations: {}
-  finalizers:
-    - kubernetes.io/pvc-protection
+  #finalizers:
+  #  - kubernetes.io/pvc-protection
   # selectorLabels: {}
   ## Sub-directory of the PV to mount. Can be templated.
   # subPath: ""

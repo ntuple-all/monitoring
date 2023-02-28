@@ -1888,8 +1888,8 @@ prometheusOperator:
     patch:
       enabled: true
       image:
-        registry: k8s.gcr.io
-        repository: ingress-nginx/kube-webhook-certgen
+        registry: repo.synctreestudio.com 
+        repository: monitoring/kube-webhook-certgen
         tag: v1.3.0
         sha: ""
         pullPolicy: IfNotPresent
@@ -2184,8 +2184,8 @@ prometheusOperator:
   ## Prometheus-operator image
   ##
   image:
-    registry: quay.io
-    repository: prometheus-operator/prometheus-operator
+    registry: repo.synctreestudio.com 
+    repository: monitoring/prometheus-operator
     # if not set appVersion field from Chart.yaml is used
     tag: ""
     sha: ""
@@ -2211,8 +2211,8 @@ prometheusOperator:
   ##
   prometheusConfigReloader:
     image:
-      registry: quay.io
-      repository: prometheus-operator/prometheus-config-reloader
+      registry: repo.synctreestudio.com
+      repository: monitoring/prometheus-config-reloader
       # if not set appVersion field from Chart.yaml is used
       tag: ""
       sha: ""
@@ -2687,8 +2687,8 @@ prometheus:
     ## Image of Prometheus.
     ##
     image:
-      registry: quay.io
-      repository: prometheus/prometheus
+      registry: repo.synctreestudio.com
+      repository: monitoring/prometheus
       tag: v2.41.0
       sha: ""
 

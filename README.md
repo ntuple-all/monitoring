@@ -1,6 +1,13 @@
 # Prometheus, Grafana 신규 구축 참고 URL
 https://www.notion.so/ntuple/Prometheus-Grafana-Helm-5f1035b32c9948bfa11b29bc0bd3f3dc
 
+# Redis Exporter 추가
+https://www.notion.so/ntuple/Prometheus-redis_exporter-2f8b7aa8c06c49dea5a8599441e2b102
+
+# Mysqld Exporter 추가
+Onprem : https://www.notion.so/ntuple/Prometheus-mysql_exporter-Onprem-5309f21b90c047e5b5ab3de2ba9d1730
+RDS : https://www.notion.so/ntuple/Prometheus-mysql_exporter-RDS-3489abfe7eb24cde915f93402c68a33d
+
 # Monitoring Pull
 git clone git@github.com:ntuple-all/monitoring.git (push 필요한 환경)
 => Lucas Lim 에게 문의 (사용자 퍼블릭 키 필요)<br/>

@@ -29,22 +29,29 @@ spec:
     - alert: NodeIncrease
       annotations:
         description: Check the cause of the increase in the number of nodes
+        triggered: NODE 개수가 6개로 증가 하였습니다.
+        resolved: NODE 개수가 5개로 감소 하였습니다.
       expr: |-
-        count(node_intr_total) >= 5
+        count(kube_node_status_condition{condition="Ready", status="true"}) >= 8
+#        count(node_intr_total) >= 5
       for: 1m
       labels:
         severity: critical
     - alert: PodCPUWarning
       annotations:
         description: POD CPU increased, need to check
+        triggered: "{{`{{`}} $labels.pod {{`}}`}} POD CPU 가 50% 이상 입니다."
+        resolved: "{{`{{`}} $labels.pod {{`}}`}} POD CPU 가 정상화 되었습니다."
       expr: |-
-        sum ((irate(container_cpu_usage_seconds_total{namespace="synctree"}[1m]) * 1000) / 2 >= 1400) by (pod)
+        avg by (pod) (irate(container_cpu_usage_seconds_total{namespace="synctree"}[1m])) >= 1
       for: 1m
       labels:
         severity: critical
     - alert: PodMemoryWarning
       annotations:
         description: POD Memory increased, need to check
+        triggered: "{{`{{`}} $labels.pod {{`}}`}} POD Memory 가 50% 이상입니다."
+        resolved: "{{`{{`}} $labels.pod {{`}}`}} POD Memory 가 정상화 되었습니다."
       expr: |-
         sum by (pod) (container_memory_working_set_bytes{namespace="synctree"} / 1024 / 1024 / 2) >= 2000
       for: 1m
@@ -53,8 +60,10 @@ spec:
     - alert: NodeDiskWarning
       annotations:
         description: Need to secure NODE DISK
+        triggered: "{{`{{`}} $labels.node {{`}}`}} NODE Disk 의 용량이 85% 이상입니다."
+        resolved: "{{`{{`}} $labels.node {{`}}`}} NODE Disk  용량이 확보 되었습니다."
       expr: |-
-        100 - ((node_filesystem_avail_bytes{mountpoint="/",fstype!="rootfs"} * 100) / node_filesystem_size_bytes{mountpoint="/",fstype!="rootfs"}) >= 85
+        (sum by (pod) (100 - ((node_filesystem_avail_bytes{fstype!="rootfs",mountpoint="/"} * 100) / node_filesystem_size_bytes{fstype!="rootfs",mountpoint="/"})) >= 85) + on(pod) group_left(node)(kube_pod_info)
       for: 1m
       labels:
         severity: critical

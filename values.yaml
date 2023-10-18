@@ -222,26 +222,26 @@ alertmanager:
       slack_configs:
       - channel: #alerttest
         send_resolved: true
-        title: 'Server Node Increase'
-        text: 'Node 증가 하였습니다. 증가한 원인 확인이 필요합니다'
+        title: 'SaaS Stage Server Node Increase'
+        text: '{{ template "custom_slack_message" . }}'
     - name: pod-cpu
       slack_configs:
       - channel: #alerttest
         send_resolved: true
-        title: 'Pod CPU > 70%'
-        text: '특정 pod의 CPU가 70% 넘었습니다.'
+        title: 'SaaS Stage Pod CPU > 70%'
+        text: '{{ template "custom_slack_message" . }}'
     - name: pod-memory
       slack_configs:
       - channel: #alerttest
         send_resolved: true
-        title: 'Pod Memory > 50% '
-        text: '특정 Pod의 Memory가 50% 넘었습니다.'
+        title: 'SaaS Stage Pod Memory > 50% '
+        text: '{{ template "custom_slack_message" . }}'
     - name: node-disk
       slack_configs:
       - channel: #alerttest
         send_resolved: true
-        title: 'Node Disk > 85%'
-        text: 'Node Disk 정리가 필요합니다.'
+        title: 'SaaS Stage Node Disk > 85%'
+        text: '{{ template "custom_slack_message" . }}'
     templates:
     - '/etc/alertmanager/config/*.tmpl'
 
@@ -263,7 +263,20 @@ alertmanager:
   ## ref: https://prometheus.io/docs/alerting/notifications/
   ##      https://prometheus.io/docs/alerting/notification_examples/
   ##
-  templateFiles: {}
+  templateFiles: 
+    slack.tmpl: |-
+        {{ define "custom_slack_message" }}
+        {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
+        {{ range .Alerts.Firing }}{{ .Annotations.triggered }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.resolved }}{{ end }}
+        {{ else }}
+        {{ if gt (len .Alerts.Firing) 0 }}
+        {{ range .Alerts.Firing }}- {{ .Annotations.triggered }}:{{ .Annotations.triggered }}
+        {{ end }}{{ end }}
+        {{ if gt (len .Alerts.Resolved) 0 }}
+        {{ range .Alerts.Resolved }}- {{ .Annotations.resolved }}:{{ .Annotations.resolved }}
+        {{ end }}{{ end }}
+        {{ end }}
+        {{ end }}
   #
   ## An example template:
   #   template_1.tmpl: |-

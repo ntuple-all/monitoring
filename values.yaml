@@ -198,7 +198,7 @@ alertmanager:
   config:
     global:
       resolve_timeout: 5m
-#      slack_api_url: https://hooks.slack.com/services/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
+#      slack_api_url: 
     route:
       group_wait: 1m
       group_interval: 5m
@@ -287,7 +287,7 @@ alertmanager:
   #       {{ range .Alerts }}
   #         *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
   #         *Cluster:* {{ template "cluster" $root }}
-  #         *Description:* {{ .Annotations.description }}
+  #         *Descripthttps://hooks.slack.com/services/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ion:* {{ .Annotations.description }}
   #         *Graph:* <{{ .GeneratorURL }}|:chart_with_upwards_trend:>
   #         *Runbook:* <{{ .Annotations.runbook }}|:spiral_note_pad:>
   #         *Details:*

@@ -11,6 +11,7 @@ spec:
   storageClassName: "standard"
   hostPath:
     path: /etc/prometheus
+    type: DirectoryOrCreate
   claimRef:
     name: prometheus-prometheus-kube-prometheus-prometheus-db-prometheus-prometheus-kube-prometheus-prometheus-0
     namespace: monitoring

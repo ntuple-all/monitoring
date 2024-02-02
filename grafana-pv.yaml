@@ -11,6 +11,7 @@ spec:
   storageClassName: "standard"
   hostPath:
     path: /etc/grafana
+    type: DirectoryOrCreate
   claimRef:
     name: prometheus-grafana
     namespace: monitoring

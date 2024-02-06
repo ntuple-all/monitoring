@@ -232,12 +232,12 @@ defaultVolumeMounts:
 extraVolumes:
   - name: synctree
     hostPath:
-      path: /var/log/synctree/logs-group/runtime-log
+      path: /var/log/synctree/logs-group
 
 # Extra volume mounts together. Corresponds to `extraVolumes`.
 extraVolumeMounts:
   - name: synctree
-    mountPath: /var/log/synctree/logs-group/runtime-log
+    mountPath: /var/log/synctree/logs-group
     readOnly: true
 
 # Extra args for the Promtail container.
@@ -556,10 +556,10 @@ config:
     scrape_configs:
       {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
       {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
-      - job_name: synctree-api-logs
+      - job_name: api-logs
         static_configs:
         - labels:
-           job: synctree-api-logs
+           job: api-logs
            __path__: /var/log/synctree/logs-group/runtime-log/proxy.log
         pipeline_stages:
           - json:
@@ -569,26 +569,77 @@ config:
           - labels:
               revision_environment:
               response_status:
-      - job_name: synctree-app-logs
+      - job_name: runtime-logs
         static_configs:
         - labels:
-           job: synctree-app-logs
+           job: runtime-logs
            __path__: /var/log/synctree/logs-group/runtime-log/synctree.log
         pipeline_stages:
           - json:
               expressions:
                 level:
+                app:
+                channel:
+                console_level:
+                type:
           - labels:
               level:
-      - job_name: synctree-console-logs
+      - job_name: studio-logs
         static_configs:
         - labels:
-           job: synctree-console-logs
+           job: studio-logs
+           __path__: /var/log/synctree/logs-group/studio-log/synctree.log
+        pipeline_stages:
+          - json:
+              expressions:
+                level:
+                app:
+                channel:
+          - labels:
+              level:
+              app:
+      - job_name: portal-logs
+        static_configs:
+        - labels:
+           job: portal-logs
+           __path__: /var/log/synctree/logs-group/portal-log/synctree.log
+        pipeline_stages:
+          - json:
+              expressions:
+                level:
+                app:
+                channel:
+          - labels:
+              level:
+              app:
+      - job_name: portal-admin-logs
+        static_configs:
+        - labels:
+           job: portal-admin-logs
+           __path__: /var/log/synctree/logs-group/portal-admin-log/synctree.log
+        pipeline_stages:
+          - json:
+              expressions:
+                level:
+                app:
+                channel:
+          - labels:
+              level:
+              app:
+      - job_name: console-logs
+        static_configs:
+        - labels:
+           job: console-logs
            __path__: /var/log/synctree/logs-group/runtime-log/console.log
         pipeline_stages:
           - json:
               expressions:
                 level:
+                channel:
+                console_level:
+                console_type:
+                environment:
+                type:
           - labels:
               level:
     limits_config:
